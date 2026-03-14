@@ -1,0 +1,134 @@
+# Copyright (c) 2018, Linaro Limited
+# SPDX-License-Identifier: Apache-2.0
+
+description: ESP32x RMT (Remote Control) Module
+
+compatible: "espressif,esp32-rmt"
+
+include: [pinctrl-device.yaml, base.yaml]
+
+child-binding:
+  description: Channel configuration.
+
+  properties:
+    reg:
+      type: int
+      required: true
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+
+      description: |
+        The ESP32 has 8 rmt channels.
+
+    mode:
+      type: string
+      required: true
+      enum:
+      - receiver
+      - transmitter
+      description: |
+        Defines if channel is used as receiver or as transmitter
+
+    clk-source:
+      type: string
+      enum:
+      - apb-clk
+      - ref-tick
+      default: ref-tick 
+      description: |
+        Defines clock source used by the RMT module. Select apb-clk for the
+        APB clock (80MHz) or ref-tick for the REF clock (1MHz). This property
+        defaults to ref-tick.
+
+    clk-divider:
+      type: int
+      default: 1
+      description: |
+        Defines the clock divider used to scale down the clk-src to a desired
+        value. Use a value 8 to scale down the 80MHz to 10MHz.
+        This property defaults to 1 (no scaling).
+
+    memblocks:
+      type: int
+      default: 1
+      description: |
+        Defines the number of memory blocks used to store data of the channel.
+        One block contains 64x32-bit. One block exists for each channel.
+        To store larger datagrams, blocks of following channels can be used by
+        setting this property to a number >1.
+        This property defaults to 1 block.
+
+    rx-idle-threshold:
+      type: int
+      default: 1000
+      description: |
+        Sets the threshold in cycles after which receiving a datagram times out
+        (no pulses received anymore). A datagram complete event is triggered
+        after this timeout. This property defaults to 1000 cycles.
+        This property is not used when the channel is used as transmitter.
+
+    rx-filter-threshold:
+      type: int
+      description: |
+        Sets the filter threshold in cycles for the receiver. Pulses shorter
+        than this threshold are discarded by the RMT module. Filtering is disabled
+        if this property is not set. This property is not used when the channel
+        is used as transmitter.
+
+    tx-carrier-signal:
+      type: string
+      enum:
+      - disabled
+      - on-high
+      - on-low
+      default: disabled
+      description: |
+        Set to on-low to send the carrier signal on logical 0. Set to on-high to send
+        the carrier signal on logical 1. Set to disabled to not send a carrier signal.
+        This property defaults to disabled. This property is not used when the
+        channel is used as receiver.
+
+    tx-carrier-high-period:
+      type: int
+      default: 10
+      description: |
+        Cycles of the high period of the carrier signal. This property defaults to
+        10 cycles. This property is not used when the channel is used as receiver.
+
+    tx-carrier-low-period:
+      type: int
+      default: 10
+      description: |
+        Cycles of the low period of the carrier signal. This property defaults to
+        10 cycles. This property is not used when the channel is used as receiver.
+
+    tx-limit:
+      type: int
+      default: 64
+      description: |
+        When the channel sends more entries than specified here, a TX_THR_EVENT 
+        event is triggered. This property defaults to 64 entries.
+        This property is not used when the channel is used as receiver.
+
+    tx_output_enable_on_idle:
+      type: boolean
+      description: |
+        When set, output is enabled when in idle state. This property defaults to
+        logical 0 (false). This property is not used when the channel is used as receiver.
+
+    tx-output-level-on-idle:
+      type: int
+      enum:
+      - 0
+      - 1
+      default: 0
+      description: |
+        Output level when transmitter is in idle mode. This property defaults to
+        logical 0 (false). This property is not used when the channel is used as receiver.

@@ -1,0 +1,12 @@
+menu "ESP32_RMT_DRIVER"
+
+config NEC4_IR_DECODER
+	bool "Enable nec4 decoder"
+	default n
+
+# https://docs.zephyrproject.org/latest/services/logging/index.html#logging-in-a-module
+module = ESP32_RMT_DRIVER
+module-str = ESP32_RMT_DRIVER
+source "subsys/logging/Kconfig.template.log_config"
+
+endmenu # ESP32_RMT_DRIVER

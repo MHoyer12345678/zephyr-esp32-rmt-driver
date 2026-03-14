@@ -1,0 +1,6 @@
+build:
+  cmake: .
+  kconfig: Kconfig
+  settings:
+    # Allow zephyr build system to pick up custom dts/bindings for this module
+    dts_root: .
